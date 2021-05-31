@@ -17,5 +17,8 @@ All actions in the following scripts are performed according to structure of dot
 
 ### Usage
 
-Make sure to place this repository in `${HOME}/dotfiles`.
-If you also like that this can not be checked in POSIX, let them know.
+Make sure to place this repository in `${HOME}/dotfiles`. 
+If you also like that this can not be checked sanely in POSIX, let them know.
+
+Make sure not to mess up your `.bashrc` or equivalent of your login shell. 
+Keep a copy of your distro and files around on your first try to restore things.
