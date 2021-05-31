@@ -1,0 +1,29 @@
+Incomplete list of safety shortcomings in POSIX shell
+
+NEVER leave your variables unquoted.
+https://unix.stackexchange.com/questions/171346/security-implications-of-forgetting-to-quote-a-variable-in-bash-posix-shells
+And variables with common prefixes without braces.
+https://stackoverflow.com/questions/8748831/when-do-we-need-curly-braces-around-shell-variables
+Always clean up your environment to prevent stack smashing.
+https://github.com/netblue30/firejail/issues/3678
+
+Better use `test [expression]` and dont dare to ask why
+`[ 12 -le 13 ]` is also part of POSIX shell.
+And why there are spaces and what happens if you forget them.
+
+You can not in a POSIX way reliably and sanely short
+1. check if symbols is defined in a script.
+https://stackoverflow.com/questions/18597697/posix-compliant-way-to-scope-variables-to-a-function-in-a-shell-script
+2. detect if a script is being sourced
+https://stackoverflow.com/questions/2683279/how-to-detect-if-a-script-is-being-sourced
+3. get the current directory of the script.
+https://stackoverflow.com/questions/29832037/how-to-get-script-directory-in-posix-sh
+4. how to find files in PATH (standard is ambiguous how it should work)
+https://unix.stackexchange.com/questions/85249/why-not-use-which-what-to-use-then
+
+
+Shells are for exactly 3 purposes of very limited sized programs and use
+an ideally type-checked language otherwise:
+1. filepath manipulation with globbing and alike
+2. piping programs and their output
+3. simple execution flow with respective job control

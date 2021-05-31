@@ -1,0 +1,9 @@
+POSIXunsafe
+README.md
+checkHealth.sh
+fileBackup.sh
+fileRemove.sh
+fileRestore.sh
+ignorefiles
+symlinkInstall.sh
+symlinkUninstall.sh
