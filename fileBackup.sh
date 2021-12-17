@@ -2,11 +2,14 @@
 ## search sub-folder paths and create symlinks of un-ignored files
 ## example: ln -s $HOME/dotfiles/.bashrc $HOME/.bashrc
 
+# The following script assumes filenames do not contain
+# control characters and dont contain leading dashes(-).
 set -o errexit   # abort on nonzero exitstatus
 set -o nounset   # abort on unbound variable
 set -o pipefail  # don't hide errors within pipes
-FAIL="TRUE"
+IFS="`printf '\n\t'`" # change IFS to just newline and tab
 
+FAIL="TRUE"
 cd "${HOME}/dotfiles"
 dotfilePaths="$(fd -uu --type f --ignore-file "${HOME}/dotfiles/ignorefiles")"
 

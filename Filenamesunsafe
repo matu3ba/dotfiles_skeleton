@@ -1,0 +1,41 @@
+Fixing Unix/Linux/POSIX Filenames:
+Control Characters (such as Newline), Leading Dashes, and Other Problems
+by David A. Wheeler
+Original material https://dwheeler.com/essays/fixing-unix-linux-filenames.html#dashes
+
+Summary of content.
+1. Prefix relative globs with `cat ./* > ../filelist`.
+   Do not use `cat * > ../filelist`, as it omits hidden files and might
+   expand `--files` to adjust the arguments of `cat`.
+2. Filenames can include newlines, but tools cant handle them.
+   Correct but many downsides:
+   ( find . -type f -exec cat {} \; ) > ../filelist
+   ( find . -type f -exec cat {} +  ) > ../filelist
+   # Correct but nonstandard:
+   ( find . -type f -print0 | xargs -0 cat ) > ../filelist
+   find . -print0 |
+   while IFS="" read -r -d "" file ; do ...
+     # Use "${file}" not $file everywhere.
+   done
+3. Do not display filenames (or other stuff) from anthing that could be untrusted
+   - filenames can include control characters and modify the terminal
+   => Pipe them to a file or editor for inspection, if you are unsure.
+   If unsure, goto point 5.
+4. The following script pattern elaborates on this:
+  #!/bin/sh
+  # if files can't contain control chars and can't start with "-":
+  set -eu
+  IFS="`printf '\n\t'`"
+  # This presumes filenames can't include control characters:
+  for file in `find .` ; do ... command "$file" ...  done
+  # This presumes filenames can't begin with "-":
+  for file in *        ; do ... command "$file" ...  done
+  # You can print filenames if they're always UTF-8 & can't inc. control chars
+5. Checking for ASCII control sequences (byte values 1 through 31, as well as 127)
+  as file names:
+  #!/bin/sh
+  badfile=`printf '*[\\x01-\\x1f\\x7f]*'`
+  find / -name "$badfile" -exec echo 1 \; | wc -l
+
+
+Ideally the Kernel would fix this, because only it can enforce the constrains.

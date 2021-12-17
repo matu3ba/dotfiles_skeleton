@@ -3,11 +3,14 @@
 ## example: if $1 is a path leading to $HOME/back/FOLDER, we restore
 ## restoring only works, if there is currently no file
 
+# The following script assumes filenames do not contain
+# control characters and dont contain leading dashes(-).
 set -o errexit   # abort on nonzero exitstatus
 set -o nounset   # abort on unbound variable
 set -o pipefail  # don't hide errors within pipes
-FAIL="TRUE"            # will be filled with defaults
+IFS="`printf '\n\t'`" # change IFS to just newline and tab
 
+FAIL="TRUE"            # will be filled with defaults
 cd "${HOME}/dotfiles"
 dotfilePaths="$(fd -uu --type f --ignore-file "${HOME}/dotfiles/ignorefiles")"
 

@@ -4,9 +4,13 @@
 ## requires fd (Rust program), because find does not support an ignore list
 ## POSIX shell, because nobody wrote a common subscript detection
 
+# The following script assumes filenames do not contain
+# control characters and dont contain leading dashes(-).
 set -o errexit   # abort on nonzero exitstatus
 set -o nounset   # abort on unbound variable
 set -o pipefail  # don't hide errors within pipes
+IFS="`printf '\n\t'`" # change IFS to just newline and tab
+
 FAIL="FALSE"
 dotfilePaths=""
 
@@ -28,6 +32,7 @@ else
     printf '%-40s' "$dfPath"
     #echo "$dfPath"
     dfabsPath="${HOME}/dotfiles/${dfPath}"
+    canonpath=$(realpath "${dfabsPath}")
     symlinkAbsPath="${HOME}/${dfPath}"
     if test -e "$symlinkAbsPath"; then
       if ! test -L "$symlinkAbsPath"; then
@@ -37,7 +42,9 @@ else
       else
         linkTarget=$(readlink -e "$symlinkAbsPath")
         #echo "linkTarget: ${linkTarget}"
-        if test "$linkTarget" != "$dfabsPath"; then
+        #echo "dfabsPath: ${dfabsPath}"
+        #echo "canonpath: ${canonpath}"
+        if test "$linkTarget" != "$canonpath"; then
           printf '%-20s' "symlink broken"
         else
           printf '%-20s' "symlink OK"
